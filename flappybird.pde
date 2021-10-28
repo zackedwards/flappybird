@@ -1,4 +1,5 @@
 //delcare global variables
+// testing
 PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle;
 PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdUpFaceDown, birdDownFaceDown, birdMidFaceDown;
 PImage higher_obstacle, lower_obstacle;
