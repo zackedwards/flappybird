@@ -11,10 +11,9 @@ ArrayList<PImage> birdFaceUp = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceDown = new ArrayList<PImage>();
 void setup()
 {
-  size(350, 620);
- 
-  daybackground = loadImage("./img/daybackground.png");
-  ground = loadImage("./img/ground.png");
+  setupBackground();
+  setupBird();
+  
   higher_obstacle = loadImage("./img/obstacle.png");
   lower_obstacle = loadImage("./img/obstacle.png");
   obstacle_width = new int[5];  
@@ -25,12 +24,13 @@ void setup()
     obstacle_width[i] = width + 200*i;
     obstacle_length[i] = (int)random(-350, 0);
   } 
-  generateBird();
+
 }
 
 void draw() {
-  setBackground();
-  setBird();
+  drawBackground();
+  drawBird();
+  
   for(int i = 0; i < 100; i++)
   {
     
@@ -68,17 +68,14 @@ void draw() {
         image(higher_obstacle, i*35, 0);
     image(lower_obstacle, i*35, 360);
     }
-  
- 
-  
-  
+
   }  
   
 }
 
 //Draw and animate the background
 //Acts in Draw
-void setBackground()
+void drawBackground()
 {
   image(daybackground, 0, 0);
   image(ground, gx, 620-119);
@@ -92,7 +89,7 @@ void setBackground()
 
 //Code related to the birds position/flap/rotation
 //acts in the Draw
-void setBird() {
+void drawBird() {
   //when bird reached apex of parabola
   if (rotation > 0) {
     image(birdFaceUp.get(flap), (daybackground.width)/2-40, bgy);
@@ -130,7 +127,7 @@ void keyPressed() {
 //This function imports the images of the bird
 //and animates the flaps and rotations
 //acts in the Setup
-void generateBird() {
+void setupBird() {
   //loading in all the image files
   birdUpMiddle = loadImage("./img/birdupMiddle.png");
   birdMidMiddle = loadImage("./img/birdmidMiddle.png");
@@ -185,4 +182,9 @@ void generateBird() {
   grav = -1;
   bgy = 100;
   flap = 0;
+}
+void setupBackground(){
+  size(350, 620);
+  daybackground = loadImage("./img/daybackground.png");
+  ground = loadImage("./img/ground.png");
 }
