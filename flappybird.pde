@@ -1,7 +1,9 @@
 //delcare global variables
 PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle;
 PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdUpFaceDown, birdDownFaceDown, birdMidFaceDown;
+PImage higher_obstacle, lower_obstacle;
 int gx, bgy, finalbgy, flap, rotation;
+int[] obstacle_width, obstacle_length;
 float grav, v, angle1;
 //declare ArrayLists of bird flapping animations for 3 tilts
 ArrayList<PImage> birdStraight = new ArrayList<PImage>();
@@ -10,15 +12,68 @@ ArrayList<PImage> birdFaceDown = new ArrayList<PImage>();
 void setup()
 {
   size(350, 620);
-  //delclare all images
+ 
   daybackground = loadImage("./img/daybackground.png");
   ground = loadImage("./img/ground.png");
+  higher_obstacle = loadImage("./img/obstacle.png");
+  lower_obstacle = loadImage("./img/obstacle.png");
+  obstacle_width = new int[5];  
+  obstacle_length = new int[obstacle_width.length];
+  
+  for(int i = 0; i < obstacle_width.length; i++)
+  {
+    obstacle_width[i] = width + 200*i;
+    obstacle_length[i] = (int)random(-350, 0);
+  } 
   generateBird();
 }
 
 void draw() {
   setBackground();
   setBird();
+  for(int i = 0; i < 100; i++)
+  {
+    
+    if (i == 0)
+    {
+      image(higher_obstacle, i*35, 0);
+    image(lower_obstacle, i*35, 360);
+    }
+    else if (i % 3 == 0)
+    {
+    image(higher_obstacle, i*35, 20);
+  image(lower_obstacle, i*35, 340);
+    }
+    
+    else if (i % 4 == 0)
+    {
+    image(higher_obstacle, i*35, 40);
+  image(lower_obstacle, i*35, 320);
+    }
+    
+    else if (i % 5 == 0)
+    {
+    image(higher_obstacle, i*35, 60);
+  image(lower_obstacle, i*35, 300);
+    }
+    
+    else if (i % 7 == 0)
+    {
+    image(higher_obstacle, i*35, -20);
+  image(lower_obstacle, i*35, 360);
+    }
+    
+    else
+    {
+        image(higher_obstacle, i*35, 0);
+    image(lower_obstacle, i*35, 360);
+    }
+  
+ 
+  
+  
+  }  
+  
 }
 
 //Draw and animate the background
