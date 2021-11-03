@@ -1,5 +1,5 @@
 //delcare global variables
-// testing
+
 PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle;
 PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdUpFaceDown, birdDownFaceDown, birdMidFaceDown;
 PImage higher_obstacle, lower_obstacle;
@@ -12,6 +12,7 @@ ArrayList<PImage> birdFaceUp = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceDown = new ArrayList<PImage>();
 void setup()
 {
+    size(350, 620);
   setupBackground();
   setupBird();
   
@@ -32,45 +33,8 @@ void draw() {
   drawBackground();
   drawBird();
   
-  for(int i = 0; i < 100; i++)
-  {
-    
-    if (i == 0)
-    {
-      image(higher_obstacle, i*35, 0);
-    image(lower_obstacle, i*35, 360);
-    }
-    else if (i % 3 == 0)
-    {
-    image(higher_obstacle, i*35, 20);
-  image(lower_obstacle, i*35, 340);
-    }
-    
-    else if (i % 4 == 0)
-    {
-    image(higher_obstacle, i*35, 40);
-  image(lower_obstacle, i*35, 320);
-    }
-    
-    else if (i % 5 == 0)
-    {
-    image(higher_obstacle, i*35, 60);
-  image(lower_obstacle, i*35, 300);
-    }
-    
-    else if (i % 7 == 0)
-    {
-    image(higher_obstacle, i*35, -20);
-  image(lower_obstacle, i*35, 360);
-    }
-    
-    else
-    {
-        image(higher_obstacle, i*35, 0);
-    image(lower_obstacle, i*35, 360);
-    }
-
-  }  
+  image(higher_obstacle, 0, -300);
+    image(lower_obstacle, 0, 460);
   
 }
 
@@ -185,7 +149,7 @@ void setupBird() {
   flap = 0;
 }
 void setupBackground(){
-  size(350, 620);
+
   daybackground = loadImage("./img/daybackground.png");
   ground = loadImage("./img/ground.png");
 }
