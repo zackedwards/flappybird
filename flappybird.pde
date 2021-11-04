@@ -4,7 +4,7 @@ PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle;
 PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdUpFaceDown, birdDownFaceDown, birdMidFaceDown;
 PImage higher_obstacle, lower_obstacle;
 int gx, bgy, finalbgy, flap, rotation;
-int[] obstacle_width, obstacle_length;
+int[] obstacle_width, obstacle_length, pipex, pipey;
 float grav, v, angle1;
 //declare ArrayLists of bird flapping animations for 3 tilts
 ArrayList<PImage> birdStraight = new ArrayList<PImage>();
@@ -12,9 +12,10 @@ ArrayList<PImage> birdFaceUp = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceDown = new ArrayList<PImage>();
 void setup()
 {
-    size(350, 620);
+  size(350, 620);
   setupBackground();
   setupBird();
+  setupObstacles();
   
   higher_obstacle = loadImage("./img/obstacle.png");
   lower_obstacle = loadImage("./img/obstacle.png");
@@ -32,10 +33,7 @@ void setup()
 void draw() {
   drawBackground();
   drawBird();
-  
-  image(higher_obstacle, 0, -300);
-    image(lower_obstacle, 0, 460);
-  
+  drawObstacles();
 }
 
 //Draw and animate the background
@@ -49,6 +47,31 @@ void drawBackground()
   if (gx < -ground.width)
   {
     gx=0;
+  }
+}
+
+//Create obstacles
+void setupObstacles() {
+  pipex = new int[4];
+  pipey = new int[pipex.length];
+  
+  for(int i = 0; i< pipex.length; i++) {
+    pipex[i] = width + 200*i;
+    pipey[i] = (int)random(-350,0);
+  }
+}
+
+//Animate obstacles
+void drawObstacles()
+{
+  for(int i = 0; i< pipex.length; i++) {
+    image(higher_obstacle, pipex[i], pipey[i]);
+    image(lower_obstacle, pipex[i], pipey[i] + 460);
+    pipex[i] -= 2;
+    if(pipex[i] < -200)
+    {
+      pipex[i] = width;
+    }
   }
 }
 
