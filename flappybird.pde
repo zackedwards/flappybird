@@ -15,6 +15,7 @@ void setup()
   size(350, 620);
   setupBackground();
   setupBird();
+<<<<<<< HEAD
   setupObstacles();
   
   higher_obstacle = loadImage("./img/obstacle.png");
@@ -27,13 +28,23 @@ void setup()
     obstacle_width[i] = width + 200*i;
     obstacle_length[i] = (int)random(-350, 0);
   } 
+=======
+  setupObstacle();
+>>>>>>> 0d6c14a694fb579a000aa9a6f5de27e084849f77
 
 }
 
 void draw() {
   drawBackground();
   drawBird();
+<<<<<<< HEAD
   drawObstacles();
+=======
+  drawObstacle();
+  
+  
+  
+>>>>>>> 0d6c14a694fb579a000aa9a6f5de27e084849f77
 }
 
 //Draw and animate the background
@@ -175,4 +186,24 @@ void setupBackground(){
 
   daybackground = loadImage("./img/daybackground.png");
   ground = loadImage("./img/ground.png");
+}
+
+void setupObstacle()
+{
+higher_obstacle = loadImage("./img/obstacle.png");
+  lower_obstacle = loadImage("./img/obstacle.png");
+  obstacle_width = new int[5];  
+  obstacle_length = new int[obstacle_width.length];
+  
+  for(int i = 0; i < obstacle_width.length; i++)
+  {
+    obstacle_width[i] = width + 200*i;
+    obstacle_length[i] = (int)random(-350, 0);
+  } 
+}
+
+void drawObstacle()
+{
+image(higher_obstacle, 0, -300);
+    image(lower_obstacle, 0, 460);
 }
