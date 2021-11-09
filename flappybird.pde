@@ -2,40 +2,29 @@
 
 PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle;
 PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdUpFaceDown, birdDownFaceDown, birdMidFaceDown;
-PImage higher_obstacle, lower_obstacle;
+PImage upperObstacle, lowerObstacle;
 int gx, bgy, finalbgy, flap, rotation;
-int[] obstacle_width, obstacle_length;
+int[] pipex = new int[3];
+int[] pipey = new int[pipex.length];
 float grav, v, angle1;
 //declare ArrayLists of bird flapping animations for 3 tilts
 ArrayList<PImage> birdStraight = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceUp = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceDown = new ArrayList<PImage>();
+
 void setup()
 {
-    size(350, 620);
+  size(350, 620);
   setupBackground();
   setupBird();
-  
-  higher_obstacle = loadImage("./img/obstacle.png");
-  lower_obstacle = loadImage("./img/obstacle.png");
-  obstacle_width = new int[5];  
-  obstacle_length = new int[obstacle_width.length];
-  
-  for(int i = 0; i < obstacle_width.length; i++)
-  {
-    obstacle_width[i] = width + 200*i;
-    obstacle_length[i] = (int)random(-350, 0);
-  } 
-
+  setupObstacles();
 }
 
 void draw() {
   drawBackground();
   drawBird();
-  
-  image(higher_obstacle, 0, -300);
-    image(lower_obstacle, 0, 460);
-  
+  drawObstacles();
+  drawGround();
 }
 
 //Draw and animate the background
@@ -43,12 +32,44 @@ void draw() {
 void drawBackground()
 {
   image(daybackground, 0, 0);
+}
+
+void drawGround()
+{
   image(ground, gx, 620-119);
   image(ground, gx + ground.width, 620-119);
   gx = gx -1;
   if (gx < -ground.width)
   {
     gx=0;
+  }
+}
+
+
+//Create obstacles
+void setupObstacles() {
+  upperObstacle = loadImage("./img/upperObstacle.png");
+  lowerObstacle = loadImage("./img/lowerObstacle.png");
+  
+  for(int i = 0; i < pipex.length; i++) {
+    pipex[i] = width + 200*i;
+    pipey[i] = (int)random(-350,0);
+  }
+}
+
+//Animate obstacles
+void drawObstacles()
+{
+  for(int i = 0; i < pipex.length; i++) {
+    image(upperObstacle, pipex[i], pipey[i]);
+    image(lowerObstacle, pipex[i], pipey[i] + 460);
+    int gameSpeed = 1;
+    pipex[i] -= gameSpeed;
+    
+    if(pipex[i] < -250)
+    {
+      pipex[i] = width;
+    }
   }
 }
 
