@@ -4,6 +4,8 @@ PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle;
 PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdUpFaceDown, birdDownFaceDown, birdMidFaceDown;
 PImage upperObstacle, lowerObstacle;
 int gx, bgy, finalbgy, flap, rotation;
+int gameState = 0;
+int gy = 620-70;
 int[] pipex = new int[3];
 int[] pipey = new int[pipex.length];
 float grav, v, angle1;
@@ -21,10 +23,18 @@ void setup()
 }
 
 void draw() {
-  drawBackground();
-  drawBird();
-  drawObstacles();
-  drawGround();
+  if(gameState==0)
+  {
+    drawBackground();
+    drawObstacles();
+    drawGround();
+    drawBird();
+  }
+  else
+  {
+    text("YOU LOSE", 20, 100);
+  }
+    
 }
 
 //Draw and animate the background
@@ -36,8 +46,8 @@ void drawBackground()
 
 void drawGround()
 {
-  image(ground, gx, 620-119);
-  image(ground, gx + ground.width, 620-119);
+  image(ground, gx, gy);
+  image(ground, gx + ground.width, gy);
   gx = gx -1;
   if (gx < -ground.width)
   {
@@ -60,15 +70,24 @@ void setupObstacles() {
 //Animate obstacles
 void drawObstacles()
 {
+  int gap = 460;
+  int bgx = (daybackground.width)/2-40;
   for(int i = 0; i < pipex.length; i++) {
     image(upperObstacle, pipex[i], pipey[i]);
-    image(lowerObstacle, pipex[i], pipey[i] + 460);
+    image(lowerObstacle, pipex[i], pipey[i] + gap);
     int gameSpeed = 1;
     pipex[i] -= gameSpeed;
     
     if(pipex[i] < -250)
     {
       pipex[i] = width;
+    }
+    if(bgx + 65 > pipex[i] && bgx < pipex[i] + 135)
+    {
+      if(!(bgy > pipey[i] + 280) || !(bgy < pipey[i] + 280 + gap))
+      {
+        gameState = 1;
+      }
     }
   }
 }
@@ -77,20 +96,21 @@ void drawObstacles()
 //acts in the Draw
 void drawBird() {
   //when bird reached apex of parabola
+  int bgx = (daybackground.width)/2-40;
   if (rotation > 0) {
-    image(birdFaceUp.get(flap), (daybackground.width)/2-40, bgy);
+    image(birdFaceUp.get(flap), bgx, bgy);
   } else if (rotation <= 0 && rotation > -20) {
-    image(birdStraight.get(flap), (daybackground.width)/2-40, bgy);
+    image(birdStraight.get(flap), bgx, bgy);
   } else if(rotation <= -20){
-    image(birdFaceDown.get(flap), (daybackground.width)/2-40, bgy);
+    image(birdFaceDown.get(flap), bgx, bgy);
   }
   
   //temporary collision logic
-  if (bgy <= 400) {
+  if (bgy + 73 < gy + 10) { //if above ground
     v = v - grav;
     bgy = bgy + int(v);
   } else {
-    bgy = 401;
+    bgy = gy - 60; //ground collision
   }
   if (flap == 8) {
     flap = 0;
@@ -104,10 +124,6 @@ void drawBird() {
 void keyPressed() {
   v = -15;
   rotation = 20;
-  //temporary ground collision
-  if (bgy == 401) {
-    bgy = 399;
-  }
 }
 
 //This function imports the images of the bird
