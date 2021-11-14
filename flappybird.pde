@@ -1,4 +1,3 @@
-//delcare global variables
 
 PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle;
 PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdUpFaceDown, birdDownFaceDown, birdMidFaceDown;
@@ -82,9 +81,9 @@ void drawObstacles()
     {
       pipex[i] = width;
     }
-    if(bgx + 65 > pipex[i] && bgx < pipex[i] + 135)
+    if(bgx > pipex[i]-73 && bgx < pipex[i] + 64)
     {
-      if(!(bgy > pipey[i] + 280) || !(bgy < pipey[i] + 280 + gap))
+      if(!(bgy > pipey[i] + 698) || !(bgy < pipey[i] + 698 + gap))
       {
         gameState = 1;
       }
