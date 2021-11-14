@@ -79,11 +79,13 @@ void drawObstacles()
     
     if(pipex[i] < -250)
     {
-      pipex[i] = width;
+      pipex[i] = width; 
     }
-    if(bgx > pipex[i]-73 && bgx < pipex[i] + 64)
+    //stroke(0);   //border for testing
+    //rect(pipex[i]-64, pipey[i] + 300, pipex[i] + 64, pipey[i] + 100);
+    if(bgx > pipex[i] - 64 && bgx < pipex[i] + 64)
     {
-      if(!(bgy > pipey[i] + 698) || !(bgy < pipey[i] + 698 + gap))
+      if(!(bgy+10 > pipey[i] + 300) || !(bgy-10 < pipey[i] + 300 + 100))
       {
         gameState = 1;
       }
@@ -103,6 +105,8 @@ void drawBird() {
   } else if(rotation <= -20){
     image(birdFaceDown.get(flap), bgx, bgy);
   }
+  //stroke(0);  //border for testing
+  //rect(bgx, bgy, birdMidMiddle.width, birdMidMiddle.height);
   
   //temporary collision logic
   if (bgy + 73 < gy + 10) { //if above ground
@@ -117,11 +121,11 @@ void drawBird() {
   flap++;
   rotation--;
 }
-
+      
 //This function acts as the controls
 //acts in Draw
 void keyPressed() {
-  v = -15;
+  v = -10;
   rotation = 20;
 }
 
