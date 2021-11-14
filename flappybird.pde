@@ -1,77 +1,39 @@
-//delcare global variables
-// testing
+
 PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle;
 PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdUpFaceDown, birdDownFaceDown, birdMidFaceDown;
-PImage higher_obstacle, lower_obstacle;
+PImage upperObstacle, lowerObstacle;
 int gx, bgy, finalbgy, flap, rotation;
-int[] obstacle_width, obstacle_length;
+int gameState = 0;
+int gy = 620-70;
+int[] pipex = new int[3];
+int[] pipey = new int[pipex.length];
 float grav, v, angle1;
 //declare ArrayLists of bird flapping animations for 3 tilts
 ArrayList<PImage> birdStraight = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceUp = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceDown = new ArrayList<PImage>();
+
 void setup()
 {
+  size(350, 620);
   setupBackground();
   setupBird();
-  
-  higher_obstacle = loadImage("./img/obstacle.png");
-  lower_obstacle = loadImage("./img/obstacle.png");
-  obstacle_width = new int[5];  
-  obstacle_length = new int[obstacle_width.length];
-  
-  for(int i = 0; i < obstacle_width.length; i++)
-  {
-    obstacle_width[i] = width + 200*i;
-    obstacle_length[i] = (int)random(-350, 0);
-  } 
-
+  setupObstacles();
 }
 
 void draw() {
-  drawBackground();
-  drawBird();
-  
-  for(int i = 0; i < 100; i++)
+  if(gameState==0)
   {
+    drawBackground();
+    drawObstacles();
+    drawGround();
+    drawBird();
+  }
+  else
+  {
+    text("YOU LOSE", 20, 100);
+  }
     
-    if (i == 0)
-    {
-      image(higher_obstacle, i*35, 0);
-    image(lower_obstacle, i*35, 360);
-    }
-    else if (i % 3 == 0)
-    {
-    image(higher_obstacle, i*35, 20);
-  image(lower_obstacle, i*35, 340);
-    }
-    
-    else if (i % 4 == 0)
-    {
-    image(higher_obstacle, i*35, 40);
-  image(lower_obstacle, i*35, 320);
-    }
-    
-    else if (i % 5 == 0)
-    {
-    image(higher_obstacle, i*35, 60);
-  image(lower_obstacle, i*35, 300);
-    }
-    
-    else if (i % 7 == 0)
-    {
-    image(higher_obstacle, i*35, -20);
-  image(lower_obstacle, i*35, 360);
-    }
-    
-    else
-    {
-        image(higher_obstacle, i*35, 0);
-    image(lower_obstacle, i*35, 360);
-    }
-
-  }  
-  
 }
 
 //Draw and animate the background
@@ -79,8 +41,12 @@ void draw() {
 void drawBackground()
 {
   image(daybackground, 0, 0);
-  image(ground, gx, 620-119);
-  image(ground, gx + ground.width, 620-119);
+}
+
+void drawGround()
+{
+  image(ground, gx, gy);
+  image(ground, gx + ground.width, gy);
   gx = gx -1;
   if (gx < -ground.width)
   {
@@ -88,24 +54,66 @@ void drawBackground()
   }
 }
 
+
+//Create obstacles
+void setupObstacles() {
+  upperObstacle = loadImage("./img/upperObstacle.png");
+  lowerObstacle = loadImage("./img/lowerObstacle.png");
+  
+  for(int i = 0; i < pipex.length; i++) {
+    pipex[i] = width + 200*i;
+    pipey[i] = (int)random(-350,0);
+  }
+}
+
+//Animate obstacles
+void drawObstacles()
+{
+  int gap = 460;
+  int bgx = (daybackground.width)/2-40;
+  for(int i = 0; i < pipex.length; i++) {
+    image(upperObstacle, pipex[i], pipey[i]);
+    image(lowerObstacle, pipex[i], pipey[i] + gap);
+    int gameSpeed = 1;
+    pipex[i] -= gameSpeed;
+    
+    if(pipex[i] < -250)
+    {
+      pipex[i] = width; 
+    }
+    //stroke(0);   //border for testing
+    //rect(pipex[i]-64, pipey[i] + 300, pipex[i] + 64, pipey[i] + 100);
+    if(bgx > pipex[i] - 64 && bgx < pipex[i] + 64)
+    {
+      if(!(bgy+10 > pipey[i] + 300) || !(bgy-10 < pipey[i] + 300 + 100))
+      {
+        gameState = 1;
+      }
+    }
+  }
+}
+
 //Code related to the birds position/flap/rotation
 //acts in the Draw
 void drawBird() {
   //when bird reached apex of parabola
+  int bgx = (daybackground.width)/2-40;
   if (rotation > 0) {
-    image(birdFaceUp.get(flap), (daybackground.width)/2-40, bgy);
+    image(birdFaceUp.get(flap), bgx, bgy);
   } else if (rotation <= 0 && rotation > -20) {
-    image(birdStraight.get(flap), (daybackground.width)/2-40, bgy);
+    image(birdStraight.get(flap), bgx, bgy);
   } else if(rotation <= -20){
-    image(birdFaceDown.get(flap), (daybackground.width)/2-40, bgy);
+    image(birdFaceDown.get(flap), bgx, bgy);
   }
+  //stroke(0);  //border for testing
+  //rect(bgx, bgy, birdMidMiddle.width, birdMidMiddle.height);
   
   //temporary collision logic
-  if (bgy <= 400) {
+  if (bgy + 73 < gy + 10) { //if above ground
     v = v - grav;
     bgy = bgy + int(v);
   } else {
-    bgy = 401;
+    bgy = gy - 60; //ground collision
   }
   if (flap == 8) {
     flap = 0;
@@ -113,16 +121,12 @@ void drawBird() {
   flap++;
   rotation--;
 }
-
+      
 //This function acts as the controls
 //acts in Draw
 void keyPressed() {
-  v = -15;
+  v = -10;
   rotation = 20;
-  //temporary ground collision
-  if (bgy == 401) {
-    bgy = 399;
-  }
 }
 
 //This function imports the images of the bird
@@ -185,7 +189,7 @@ void setupBird() {
   flap = 0;
 }
 void setupBackground(){
-  size(350, 620);
+
   daybackground = loadImage("./img/daybackground.png");
   ground = loadImage("./img/ground.png");
 }
