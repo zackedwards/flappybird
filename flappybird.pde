@@ -1,11 +1,11 @@
-
-PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle;
-PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdUpFaceDown, birdDownFaceDown, birdMidFaceDown;
-PImage upperObstacle, lowerObstacle;
+PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle, birdUpFaceDown;
+PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdDownFaceDown, birdMidFaceDown;
+PImage upperObstacle, lowerObstacle, gameOver, title, start;
 int gx, bgy, finalbgy, flap, rotation;
-int gameState = 0;
+int gameState = 2;
 int gy = 620-70;
-int[] pipex = new int[3];
+int l = 0; //obstacle location
+int[] pipex = new int[3]; //changes amount of pipe variation, might cause issues
 int[] pipey = new int[pipex.length];
 float grav, v, angle1;
 //declare ArrayLists of bird flapping animations for 3 tilts
@@ -19,6 +19,7 @@ void setup()
   setupBackground();
   setupBird();
   setupObstacles();
+  setupMenu();
 }
 
 void draw() {
@@ -29,11 +30,36 @@ void draw() {
     drawGround();
     drawBird();
   }
-  else
+  else if (gameState==1)
   {
-    text("YOU LOSE", 20, 100);
+    image(gameOver, (daybackground.width/2)-(gameOver.width/2), 100);
+  }
+  else if (gameState==2)
+  {
+    drawBackground();
+    drawGround();
+    drawMenu();
   }
     
+}
+    
+void drawMenu()
+{
+  image(title, 25, 100);
+  image(start, (daybackground.width/2)-(start.width/2), 250);
+  
+  int bgx = (daybackground.width)/2-40;
+  image(birdStraight.get(flap), bgx, bgy);
+  if (flap == 8) {
+    flap = 0;
+  }
+  flap++;
+  if(bgy == 400)
+  {
+    v = -10;
+  }
+  v = v - grav;
+  bgy = bgy + int(v);
 }
 
 //Draw and animate the background
@@ -59,10 +85,14 @@ void drawGround()
 void setupObstacles() {
   upperObstacle = loadImage("./img/upperObstacle.png");
   lowerObstacle = loadImage("./img/lowerObstacle.png");
-  
-  for(int i = 0; i < pipex.length; i++) {
-    pipex[i] = width + 200*i;
-    pipey[i] = (int)random(-350,0);
+  setPipeLocations();
+}
+
+void setPipeLocations()
+{
+  for(int j = 0; j < pipex.length; j++) {
+    pipex[j] = width + 200*j;
+    pipey[j] = (int)random(-350,50); //might need editing
   }
 }
 
@@ -71,24 +101,31 @@ void drawObstacles()
 {
   int gap = 460;
   int bgx = (daybackground.width)/2-40;
-  for(int i = 0; i < pipex.length; i++) {
-    image(upperObstacle, pipex[i], pipey[i]);
-    image(lowerObstacle, pipex[i], pipey[i] + gap);
+  for(l = 0; l < pipex.length; l++) {
+    image(upperObstacle, pipex[l], pipey[l]);
+    image(lowerObstacle, pipex[l], pipey[l]-500);
+    image(lowerObstacle, pipex[l], pipey[l] + gap);
     int gameSpeed = 1;
-    pipex[i] -= gameSpeed;
-    
-    if(pipex[i] < -250)
+    pipex[l] -= gameSpeed;
+    if(pipex[l] < -250)
     {
-      pipex[i] = width; 
+      pipex[l] = width; 
     }
-    //stroke(0);   //border for testing
-    //rect(pipex[i]-64, pipey[i] + 300, pipex[i] + 64, pipey[i] + 100);
-    if(bgx > pipex[i] - 64 && bgx < pipex[i] + 64)
+    collisionLogic();
+  }
+}
+
+void collisionLogic()
+{
+  int bgx = (daybackground.width)/2-40;
+  //collision logic
+  //stroke(0);   //border for testing
+  //rect(pipex[i]-64, pipey[i] + 300, pipex[i] + 64, pipey[i] + 100);
+  if(bgx > pipex[l] - 64 && bgx < pipex[l] + 64)
+  {
+    if(!(bgy+10 > pipey[l] + 300) || !(bgy-10 < pipey[l] + 300 + 100))
     {
-      if(!(bgy+10 > pipey[i] + 300) || !(bgy-10 < pipey[i] + 300 + 100))
-      {
-        gameState = 1;
-      }
+      gameState = 1;
     }
   }
 }
@@ -96,8 +133,8 @@ void drawObstacles()
 //Code related to the birds position/flap/rotation
 //acts in the Draw
 void drawBird() {
-  //when bird reached apex of parabola
   int bgx = (daybackground.width)/2-40;
+  //when bird reached apex of parabola
   if (rotation > 0) {
     image(birdFaceUp.get(flap), bgx, bgy);
   } else if (rotation <= 0 && rotation > -20) {
@@ -113,8 +150,9 @@ void drawBird() {
     v = v - grav;
     bgy = bgy + int(v);
   } else {
-    bgy = gy - 60; //ground collision
+    gameState = 1; //ground collision
   }
+  //flap/rotation logic
   if (flap == 8) {
     flap = 0;
   }
@@ -125,6 +163,18 @@ void drawBird() {
 //This function acts as the controls
 //acts in Draw
 void keyPressed() {
+  //start the game
+  if(gameState==2)
+  {
+    gameState=0;
+  }
+  if(gameState==1)
+  {
+    bgy = 400;
+    setPipeLocations();
+    gameState=2;
+  }
+  //jump
   v = -10;
   rotation = 20;
 }
@@ -185,11 +235,18 @@ void setupBird() {
   }
   //declaring important variables for the bird
   grav = -1;
-  bgy = 100;
+  bgy = 400;
   flap = 0;
 }
 void setupBackground(){
 
   daybackground = loadImage("./img/daybackground.png");
   ground = loadImage("./img/ground.png");
+}
+
+void setupMenu()
+{
+  gameOver = loadImage("./img/gameOver.png");
+  title = loadImage("./img/flappyBirdTitle.png");
+  start = loadImage("./img/start.png");
 }
