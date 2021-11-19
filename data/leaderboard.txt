@@ -1,3 +1,4 @@
+Score: 9
 Score: 7
 Score: 2
 Score: 5
@@ -7,8 +8,3 @@ Score: 1
 Score: 1
 Score: 16
 Score: 5
-Score: 5
-Score: 4
-Score: 2
-Score: 1
-Score: 0

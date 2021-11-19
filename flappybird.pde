@@ -7,17 +7,14 @@ int gx, bgy, finalbgy, flap, rotation, score;
 int gameState = 2;
 int gy = 620-70;
 int l = 0; //obstacle location
-int score;
 int[] pipex = new int[3]; //changes amount of pipe variation, might cause issues
 int[] pipey = new int[pipex.length];
 float grav, v, angle1;
-PFont font;
-
 //declare ArrayLists of bird flapping animations for 3 tilts
 ArrayList<PImage> birdStraight = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceUp = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceDown = new ArrayList<PImage>();
-PFont font = createFont("04B_19__.TTF", 32);
+PFont font;
 
 void setup()
 {
@@ -35,11 +32,7 @@ void draw() {
     drawObstacles();
     drawGround();
     drawBird();
-<<<<<<< HEAD
     drawScore();
-=======
-    scoreCounter();
->>>>>>> 7c18466a6247068114f80d25e4e53d5a48259470
   }
   else if (gameState==1)
   {
@@ -62,7 +55,6 @@ void draw() {
     
 }
 
-<<<<<<< HEAD
 void drawLeaderBoard()
 {
   String[] leaderboard = loadStrings("./data/leaderboard.txt");
@@ -121,15 +113,7 @@ String[] insert(int n, String[] initialArray, int score, int pos){
 void drawScore() {
   textSize(30);
   textFont(font);
-  text("Score: " + score, 20, 600);
-=======
-void scoreCounter()
-{
-  fill(0);
-  font = createFont("04B_19__.TTF", 32);
-  textFont(font);
-  text("SCORE: " + score, width-140, 40);
->>>>>>> 7c18466a6247068114f80d25e4e53d5a48259470
+  text("Score: " + score, 20, 605);
 }
     
 void drawMenu()
@@ -137,9 +121,10 @@ void drawMenu()
   image(title, 25, 100);
   image(startButton, (daybackground.width/2)-(startButton.width/2), 250);
   image(scoreButton, (daybackground.width/2)-(scoreButton.width/2), 300);
-  textSize(25);
   fill(0);
-  text("Space to start, L for LeaderBoard", 5, 600);
+  textFont(font);
+  textSize(19);
+  text("Space to start, L for LeaderBoard", 5, 605);
   
   int bgx = (daybackground.width)/2-40;
   image(birdStraight.get(flap), bgx, bgy);
@@ -219,11 +204,7 @@ void collisionLogic()
     {
       gameState = 1;
     }
-<<<<<<< HEAD
     else if(bgx == pipex[l]){
-=======
-    else if (bgx == pipex[l]) {
->>>>>>> 7c18466a6247068114f80d25e4e53d5a48259470
       score++;
     }
   }
@@ -274,16 +255,21 @@ void keyPressed() {
       gameState=0;
     }
   }
-  if(gameState==1)
+  else if(gameState==3)
+  {
+    gameState = 2;
+  }
+  else if(gameState==1)
   {
     bgy = 400;
     setPipeLocations();
     gameState=2;
-    score = 0;
   }
-  //jump
-  v = -10;
-  rotation = 20;
+  else if(gameState == 0){
+    //jump
+    v = -10;
+    rotation = 20;
+  }
 }
 
 //This function imports the images of the bird
@@ -357,4 +343,5 @@ void setupMenu()
   title = loadImage("./img/flappyBirdTitle.png");
   startButton = loadImage("./img/start.png");
   scoreButton = loadImage("./img/scoreButton.png");
+  font = createFont("04B_19__.TTF", 32);
 }
