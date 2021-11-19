@@ -7,9 +7,12 @@ int gx, bgy, finalbgy, flap, rotation, score;
 int gameState = 2;
 int gy = 620-70;
 int l = 0; //obstacle location
+int score;
 int[] pipex = new int[3]; //changes amount of pipe variation, might cause issues
 int[] pipey = new int[pipex.length];
 float grav, v, angle1;
+PFont font;
+
 //declare ArrayLists of bird flapping animations for 3 tilts
 ArrayList<PImage> birdStraight = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceUp = new ArrayList<PImage>();
@@ -32,7 +35,11 @@ void draw() {
     drawObstacles();
     drawGround();
     drawBird();
+<<<<<<< HEAD
     drawScore();
+=======
+    scoreCounter();
+>>>>>>> 7c18466a6247068114f80d25e4e53d5a48259470
   }
   else if (gameState==1)
   {
@@ -55,6 +62,7 @@ void draw() {
     
 }
 
+<<<<<<< HEAD
 void drawLeaderBoard()
 {
   String[] leaderboard = loadStrings("./data/leaderboard.txt");
@@ -114,6 +122,14 @@ void drawScore() {
   textSize(30);
   textFont(font);
   text("Score: " + score, 20, 600);
+=======
+void scoreCounter()
+{
+  fill(0);
+  font = createFont("04B_19__.TTF", 32);
+  textFont(font);
+  text("SCORE: " + score, width-140, 40);
+>>>>>>> 7c18466a6247068114f80d25e4e53d5a48259470
 }
     
 void drawMenu()
@@ -203,7 +219,11 @@ void collisionLogic()
     {
       gameState = 1;
     }
+<<<<<<< HEAD
     else if(bgx == pipex[l]){
+=======
+    else if (bgx == pipex[l]) {
+>>>>>>> 7c18466a6247068114f80d25e4e53d5a48259470
       score++;
     }
   }
@@ -259,6 +279,7 @@ void keyPressed() {
     bgy = 400;
     setPipeLocations();
     gameState=2;
+    score = 0;
   }
   //jump
   v = -10;
