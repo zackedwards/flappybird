@@ -5,9 +5,12 @@ int gx, bgy, finalbgy, flap, rotation;
 int gameState = 2;
 int gy = 620-70;
 int l = 0; //obstacle location
+int score;
 int[] pipex = new int[3]; //changes amount of pipe variation, might cause issues
 int[] pipey = new int[pipex.length];
 float grav, v, angle1;
+PFont font;
+
 //declare ArrayLists of bird flapping animations for 3 tilts
 ArrayList<PImage> birdStraight = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceUp = new ArrayList<PImage>();
@@ -29,6 +32,7 @@ void draw() {
     drawObstacles();
     drawGround();
     drawBird();
+    scoreCounter();
   }
   else if (gameState==1)
   {
@@ -41,6 +45,14 @@ void draw() {
     drawMenu();
   }
     
+}
+
+void scoreCounter()
+{
+  fill(0);
+  font = createFont("04B_19__.TTF", 32);
+  textFont(font);
+  text("SCORE: " + score, width-140, 40);
 }
     
 void drawMenu()
@@ -127,6 +139,9 @@ void collisionLogic()
     {
       gameState = 1;
     }
+    else if (bgx == pipex[l]) {
+      score++;
+    }
   }
 }
 
@@ -173,6 +188,7 @@ void keyPressed() {
     bgy = 400;
     setPipeLocations();
     gameState=2;
+    score = 0;
   }
   //jump
   v = -10;
