@@ -343,5 +343,5 @@ void setupMenu()
   title = loadImage("./img/flappyBirdTitle.png");
   startButton = loadImage("./img/start.png");
   scoreButton = loadImage("./img/scoreButton.png");
-  font = createFont("04B_19__.TTF", 32);
+  font = createFont("./img/04B_19__.TTF", 32);
 }
