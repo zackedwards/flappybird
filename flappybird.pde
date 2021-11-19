@@ -1,7 +1,9 @@
+import java.util.Arrays;
+
 PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle, birdUpFaceDown;
 PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdDownFaceDown, birdMidFaceDown;
-PImage upperObstacle, lowerObstacle, gameOver, title, start;
-int gx, bgy, finalbgy, flap, rotation;
+PImage upperObstacle, lowerObstacle, gameOver, title, startButton, scoreButton;
+int gx, bgy, finalbgy, flap, rotation, score;
 int gameState = 2;
 int gy = 620-70;
 int l = 0; //obstacle location
@@ -12,6 +14,7 @@ float grav, v, angle1;
 ArrayList<PImage> birdStraight = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceUp = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceDown = new ArrayList<PImage>();
+PFont font = createFont("04B_19__.TTF", 32);
 
 void setup()
 {
@@ -29,6 +32,7 @@ void draw() {
     drawObstacles();
     drawGround();
     drawBird();
+    drawScore();
   }
   else if (gameState==1)
   {
@@ -36,17 +40,90 @@ void draw() {
   }
   else if (gameState==2)
   {
+    saveScore();
     drawBackground();
     drawGround();
     drawMenu();
+    score = 0;
+  }
+  else if(gameState == 3)
+  {
+    drawBackground();
+    drawGround();
+    drawLeaderBoard();
   }
     
+}
+
+void drawLeaderBoard()
+{
+  String[] leaderboard = loadStrings("./data/leaderboard.txt");
+  textSize(30);
+  text("LeaderBoard:", 100, 30);
+  int[] scores = new int[leaderboard.length];
+  for(int i = 0; i < leaderboard.length; i++)
+  {
+    String[] currentLine = leaderboard[i].split(":");
+    scores[i] = int(currentLine[1].strip());
+  }
+  scores = sort(scores);
+  scores = reverse(scores);
+  for(int i = 0; i < 10; i++)
+  {
+    textSize(30);
+    text(scores[i], 175, i*30+60);
+  }
+}
+
+void saveScore(){
+//saving new score
+  String[] leaderboard = loadStrings("./data/leaderboard.txt");
+  for(int i = 0; i < leaderboard.length; i++){
+    String[] currentLine = leaderboard[i].split(":");  
+    if(score > int(currentLine[1])){
+      //potentially add an insert namme here to add to the leaderboard
+      leaderboard = insert(leaderboard.length, leaderboard, score, i);
+      if(leaderboard.length > 10){
+        leaderboard = Arrays.copyOfRange(leaderboard, 0, 10);
+      }
+      saveStrings("./data/leaderboard.txt", leaderboard);
+      break;
+    }
+  }
+}
+
+//used for inserting a score into the leaderboard
+//referenced: https://www.geeksforgeeks.org/how-to-insert-an-element-at-a-specific-position-in-an-array-in-java/
+String[] insert(int n, String[] initialArray, int score, int pos){
+  String[] newArr = new String[n + 1];
+  for(int i = 0; i < n + 1; i++){
+    if(pos > 0){
+      if(i < pos - 1){newArr[i] = initialArray[i];}
+      else if(i == pos - 1){newArr[i] = "Score: " + score;}
+      else{newArr[i] = initialArray[i - 1];}
+    }
+    else{
+      if(i == 0){newArr[i] = "Score: " + score;}
+      else{newArr[i] = initialArray[i - 1];}
+    }
+  }
+  return newArr;
+}
+
+void drawScore() {
+  textSize(30);
+  textFont(font);
+  text("Score: " + score, 20, 600);
 }
     
 void drawMenu()
 {
   image(title, 25, 100);
-  image(start, (daybackground.width/2)-(start.width/2), 250);
+  image(startButton, (daybackground.width/2)-(startButton.width/2), 250);
+  image(scoreButton, (daybackground.width/2)-(scoreButton.width/2), 300);
+  textSize(25);
+  fill(0);
+  text("Space to start, L for LeaderBoard", 5, 600);
   
   int bgx = (daybackground.width)/2-40;
   image(birdStraight.get(flap), bgx, bgy);
@@ -100,7 +177,6 @@ void setPipeLocations()
 void drawObstacles()
 {
   int gap = 460;
-  int bgx = (daybackground.width)/2-40;
   for(l = 0; l < pipex.length; l++) {
     image(upperObstacle, pipex[l], pipey[l]);
     image(lowerObstacle, pipex[l], pipey[l]-500);
@@ -109,7 +185,7 @@ void drawObstacles()
     pipex[l] -= gameSpeed;
     if(pipex[l] < -250)
     {
-      pipex[l] = width; 
+      pipex[l] = width;
     }
     collisionLogic();
   }
@@ -126,6 +202,9 @@ void collisionLogic()
     if(!(bgy+10 > pipey[l] + 300) || !(bgy-10 < pipey[l] + 300 + 100))
     {
       gameState = 1;
+    }
+    else if(bgx == pipex[l]){
+      score++;
     }
   }
 }
@@ -166,7 +245,14 @@ void keyPressed() {
   //start the game
   if(gameState==2)
   {
-    gameState=0;
+    if(key == 'l')
+    {
+      gameState=3;
+    }
+    else
+    {
+      gameState=0;
+    }
   }
   if(gameState==1)
   {
@@ -248,5 +334,6 @@ void setupMenu()
 {
   gameOver = loadImage("./img/gameOver.png");
   title = loadImage("./img/flappyBirdTitle.png");
-  start = loadImage("./img/start.png");
+  startButton = loadImage("./img/start.png");
+  scoreButton = loadImage("./img/scoreButton.png");
 }
