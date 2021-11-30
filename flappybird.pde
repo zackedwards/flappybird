@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import processing.sound.*;
 
 PImage daybackground, ground, birdUpMiddle, birdDownMiddle, birdMidMiddle, birdUpFaceDown;
 PImage birdUpFaceUp, birdDownFaceUp, birdMidFaceUp, birdDownFaceDown, birdMidFaceDown;
@@ -16,6 +17,9 @@ ArrayList<PImage> birdFaceUp = new ArrayList<PImage>();
 ArrayList<PImage> birdFaceDown = new ArrayList<PImage>();
 PFont font;
 
+SoundFile song;
+//SoundFile dead, start, end;
+
 void setup()
 {
   size(350, 620);
@@ -23,6 +27,7 @@ void setup()
   setupBird();
   setupObstacles();
   setupMenu();
+  setupMusic();
 }
 
 void draw() {
@@ -53,6 +58,15 @@ void draw() {
     drawLeaderBoard();
   }
     
+}
+
+void setupMusic()
+{
+  song = new SoundFile(this, "main_theme.wav");
+  //dead = new SoundFile(this, "dead.wav");
+  //start = new SoundFile(this, "./music/start_up.mp3");
+  //end = new SoundFile(this, "./music/game_over.mp3");
+  song.loop();
 }
 
 void drawLeaderBoard()
@@ -244,28 +258,29 @@ void drawBird() {
 //acts in Draw
 void keyPressed() {
   //start the game
-  if(gameState==2)
+  if(gameState==2) //menu
   {
     if(key == 'l')
     {
-      gameState=3;
+      gameState=3; //leaderboard
     }
     else
     {
-      gameState=0;
+      gameState=0; //playing
+      v = -10; 
     }
   }
-  else if(gameState==3)
+  else if(gameState==3) //leaderboard
   {
-    gameState = 2;
+    gameState = 2; //main menu
   }
-  else if(gameState==1)
+  else if(gameState==1) //game over screen
   {
     bgy = 400;
     setPipeLocations();
     gameState=2;
   }
-  else if(gameState == 0){
+  else if(gameState == 0){ //while playing
     //jump
     v = -10;
     rotation = 20;
