@@ -31,7 +31,7 @@ void setup()
 }
 
 void draw() {
-  if(gameState==0)
+  if(gameState==0) //while playing the game
   {
     drawBackground();
     drawObstacles();
@@ -39,11 +39,12 @@ void draw() {
     drawBird();
     drawScore();
   }
-  else if (gameState==1)
+  else if (gameState==1) //game over screen
   {
     image(gameOver, (daybackground.width/2)-(gameOver.width/2), 100);
+    text("Space to return", (daybackground.width/2)-125, 200);
   }
-  else if (gameState==2)
+  else if (gameState==2) //main menu
   {
     saveScore();
     drawBackground();
@@ -51,7 +52,7 @@ void draw() {
     drawMenu();
     score = 0;
   }
-  else if(gameState == 3)
+  else if(gameState == 3) //leadeboard
   {
     drawBackground();
     drawGround();
@@ -146,7 +147,7 @@ void drawMenu()
     flap = 0;
   }
   flap++;
-  if(bgy == 400)
+  if(bgy >= 400)
   {
     v = -10;
   }
@@ -282,7 +283,7 @@ void keyPressed() {
   }
   else if(gameState == 0){ //while playing
     //jump
-    v = -10;
+    v = -12; //jump speed
     rotation = 20;
   }
 }
@@ -342,7 +343,7 @@ void setupBird() {
     }
   }
   //declaring important variables for the bird
-  grav = -1;
+  grav = -0.85;
   bgy = 400;
   flap = 0;
 }
